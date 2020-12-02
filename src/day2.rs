@@ -3,22 +3,22 @@ use std::io::{self, BufRead};
 use std::path::Path;
 
 #[derive(Debug, Eq, PartialEq)]
-struct Entry {
+struct Entry<'a> {
   lowest: usize,
   highest: usize,
   letter: char,
-  password: String,
+  password: &'a str,
 }
 
-impl Entry {
+impl Entry<'_> {
   fn valid(&self) -> bool {
     let count = self.password.matches(self.letter).count();
     count >= self.lowest && count <= self.highest
   }
 
   fn valid_second(&self) -> bool {
-    let first = parse_char_at(self.password.as_str(), self.lowest - 1);
-    let second = parse_char_at(self.password.as_str(), self.highest - 1);
+    let first = parse_char_at(self.password, self.lowest - 1);
+    let second = parse_char_at(self.password, self.highest - 1);
 
     (first == self.letter && second != self.letter)
       || (first != self.letter && second == self.letter)
@@ -86,7 +86,7 @@ fn parse_line(policy: &str) -> Entry {
     lowest: parse_usize(min_max[0]),
     highest: parse_usize(min_max[1]),
     letter: parse_char(second_part[1]),
-    password: String::from(first_part[1].trim()),
+    password: first_part[1].trim(),
   }
 }
 
@@ -98,7 +98,7 @@ fn parse_line_expected() {
       lowest: 1,
       highest: 3,
       letter: 'a',
-      password: String::from("abcde")
+      password: "abcde"
     }
   );
   assert_eq!(
@@ -107,7 +107,7 @@ fn parse_line_expected() {
       lowest: 1,
       highest: 3,
       letter: 'b',
-      password: String::from("cdefg")
+      password: "cdefg"
     }
   );
   assert_eq!(
@@ -116,7 +116,7 @@ fn parse_line_expected() {
       lowest: 2,
       highest: 9,
       letter: 'c',
-      password: String::from("ccccccccc")
+      password: "ccccccccc"
     }
   );
 }
@@ -127,21 +127,21 @@ fn validates_expected() {
     lowest: 1,
     highest: 3,
     letter: 'a',
-    password: String::from("abcde"),
+    password: "abcde",
   };
   assert_eq!(entry1.valid(), true);
   let entry2 = Entry {
     lowest: 1,
     highest: 3,
     letter: 'b',
-    password: String::from("cdefg"),
+    password: "cdefg",
   };
   assert_eq!(entry2.valid(), false);
   let entry3 = Entry {
     lowest: 2,
     highest: 9,
     letter: 'c',
-    password: String::from("ccccccccc"),
+    password: "ccccccccc",
   };
   assert_eq!(entry3.valid(), true);
 }
@@ -152,21 +152,21 @@ fn validate_second_expected() {
     lowest: 1,
     highest: 3,
     letter: 'a',
-    password: String::from("abcde"),
+    password: "abcde",
   };
   assert_eq!(entry1.valid_second(), true);
   let entry2 = Entry {
     lowest: 1,
     highest: 3,
     letter: 'b',
-    password: String::from("cdefg"),
+    password: "cdefg",
   };
   assert_eq!(entry2.valid_second(), false);
   let entry3 = Entry {
     lowest: 2,
     highest: 9,
     letter: 'c',
-    password: String::from("ccccccccc"),
+    password: "ccccccccc",
   };
   assert_eq!(entry3.valid_second(), false);
 }
