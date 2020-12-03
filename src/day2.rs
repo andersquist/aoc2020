@@ -1,6 +1,4 @@
-use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
+use super::utils::read_lines;
 
 #[derive(Debug, Eq, PartialEq)]
 struct Entry<'a> {
@@ -23,16 +21,6 @@ impl Entry<'_> {
     (first == self.letter && second != self.letter)
       || (first != self.letter && second == self.letter)
   }
-}
-
-// The output is wrapped in a Result to allow matching on errors
-// Returns an Iterator to the Reader of the lines of the file.
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where
-  P: AsRef<Path>,
-{
-  let file = File::open(filename)?;
-  Ok(io::BufReader::new(file).lines())
 }
 
 pub fn password_policy() -> (i32, i32, i32) {
