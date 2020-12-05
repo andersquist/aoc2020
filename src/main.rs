@@ -1,11 +1,13 @@
 mod day2;
 mod day3;
+mod day4;
 mod utils;
 
 use std::env::args;
 
 use day2::password_policy;
 use day3::{count_trees, count_trees_all_slopes};
+use day4::{count_valid_passports, count_valid_passports_values};
 
 fn main() {
     let day = match args().nth(1) {
@@ -28,6 +30,10 @@ fn main() {
                 "Puzzle 2: {} product of all trees encounterd",
                 count_trees_all_slopes()
             );
+        }
+        "4" => {
+            count_valid_passports();
+            count_valid_passports_values();
         }
         _ => panic!("No such day!"),
     }
