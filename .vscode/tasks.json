@@ -18,7 +18,7 @@
       "command": "cargo",
       "args": [
         "run",
-        "4"
+        "5"
       ],
       "group": {
         "kind": "build",
